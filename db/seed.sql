@@ -10,7 +10,7 @@ INSERT into roles (title, salary, department_id) VALUES ("Sales person", 50000, 
 INSERT into roles (title, salary, department_id) VALUES ("IT Manager", 100000, 2);
 INSERT into roles (title, salary, department_id) VALUES ("Engineer", 900000, 2);
 INSERT into roles (title, salary, department_id) VALUES ("Legal Manager", 100000, 3);
-INSERT into roles (title, salary, department_id) VALUES ("Legal Team Memember", 30000, 3);
+INSERT into roles (title, salary, department_id) VALUES ("Legal Team Member", 30000, 3);
 INSERT into roles (title, salary, department_id) VALUES ("Legal Lawyer", 30000, 3);
 INSERT into roles (title, salary, department_id) VALUES ("Legal Consultant", 30000, 3);
 INSERT into roles (title, salary, department_id) VALUES ("Counselor", 80000, 4);

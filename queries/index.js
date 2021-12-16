@@ -19,7 +19,10 @@ const queryManager = {
     },
     async add(tableName){
         console.log(tableName);
-        const {id, name, title, first_name, last_name, salary, role_id, department_id, manager_id } = await prompt([
+        const roleData = await query(`SELECT * FROM roles`);
+        const managerData = await query(`SELECT * FROM employees WHERE manager_id IS NULL`);
+
+        const {id, name, title, first_name, last_name, salary, role_id, department_id, manager, manager_id } = await prompt([
         {
             when: (tableName) == "departments",
             message: `What ${tableName.slice(0,-1)} would you like to add?`,
@@ -63,7 +66,14 @@ const queryManager = {
             message: "What is this employee's role id?",
             name: "role_id",
             type: "list",
-            choices: [],
+            choices: roleData.map(item => ({name: item.title, value: item.id})),
+        },
+        {
+            when: (tableName) == "employees",
+            message: "Who is this employee's manager",
+            name: "manager_id",
+            type: "list",
+            choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id}))
         },
     ]);
         if (tableName == "departments") {
@@ -76,7 +86,7 @@ const queryManager = {
         };
         if (tableName == "employees") {
             return query(`INSERT INTO ${tableName} 
-            (first_name, last_name, role_id, manager_id) VALUES (${first_name}, ${last_name}, ${role_id}, ${manager_id})`)
+            (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id})`)
     };
     },
     async delete(tableName){
@@ -92,17 +102,5 @@ const queryManager = {
         return query(`DELETE FROM ${tableName} WHERE id = ${selection}`)
     }
 }
-
-// function viewChoices() {
-//     const data = query('SELECT * FROM roles');
-//     console.log(data);
-//     const {role_id} = prompt({
-//         message: `Which role id would you like to choose?`,
-//         type: "list",
-//         choices: data.map(item => ({name: item[tableName.slice(0,-1)], value: item.id})),
-//         name: 'role_id'
-//     });
-//     return role_id;
-// }
 
 module.exports = queryManager;

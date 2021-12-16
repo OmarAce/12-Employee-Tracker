@@ -17,11 +17,12 @@ const main = async () => {
         {name: "View All Departments", value: "view departments"},
         {name: "Add Departments", value: "add departments"},
         {name: "Delete Department", value: "delete departments"},
-        {name: "Quit", value: "quit"},
     ]
     })
     const [method, argument] = response.choice.split(" ") //["view", "flavors"]
     const result = await db[method](argument);
+    console.log(response);
+    console.log(result);
     console.table(result);
     setTimeout(main, 1500);
 }
