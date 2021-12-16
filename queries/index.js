@@ -18,30 +18,66 @@ const queryManager = {
         return query(`SELECT * FROM ${tableName}`)
     },
     async add(tableName){
-        const {id, title, first_name, last_name, salary, role_id, department_id, manager_id } = await prompt([
+        console.log(tableName);
+        const {id, name, title, first_name, last_name, salary, role_id, department_id, manager_id } = await prompt([
         {
-            when: tableName = department,
+            when: (tableName) == "departments",
             message: `What ${tableName.slice(0,-1)} would you like to add?`,
             name: 'name',
         }, 
         {
-            message: `How many calories is this ${tableName.slice(0,-1)}?`,
-            name: "calories",
-            type: "list",
-            choices: [20, 50, 100, 150, 200, 1000]
+            when: (tableName) == "roles",
+            message: `What is the title of the ${tableName.slice(0,-1)}?`,
+            name: "title",
         },
         {
-            message: `How much is this ${tableName.slice(0,-1)}?`,
-            name: "price",
-            type: "input",
+            when: (tableName) == "roles",
+            message: `What is this ${tableName.slice(0,-1)}'s salary?`,
+            name: "salary",
+            type: "input0",
             validate: (val) => {
-                return !isNaN(val) || "you need to put a number fool!"
+                return !isNaN(val) || "you need to input a number!"
             }
         },
+        {
+            when: (tableName) == "roles",
+            message: `What is this ${tableName.slice(0,-1)}'s deparment id?`,
+            name: "department_id",
+            type: "input",
+            validate: (val) => {
+                return !isNaN(val) || "you need to input a number!"
+            }
+        },
+        {
+            when: (tableName) == "employees",
+            message: `What is this ${tableName.slice(0,-1)}'s first name?`,
+            name: "first_name",
+        },
+        {
+            when: (tableName) == "employees",
+            message: `What is this ${tableName.slice(0,-1)}'s last name?`,
+            name: "last_name",
+        },
+        {
+            when: (tableName) == "employees",
+            message: "What is this employee's role id?",
+            name: "role_id",
+            type: "list",
+            choices: viewChoices(),
+        },
     ]);
-
-    return query(`INSERT INTO ${tableName}
-     (${tableName.slice(0,-1)}, calories, price) VALUES ('${name}', ${calories}, ${price})`)
+        if (tableName == "departments") {
+            return query(`INSERT INTO ${tableName}
+            (name) VALUES ('${name}')`)
+        };
+        if (tableName == "roles") {
+            return query(`INSERT INTO ${tableName}
+            (title, salary, department_id) VALUES ('${title}', ${salary}, ${department_id})`)
+        };
+        if (tableName == "employees") {
+            return query(`INSERT INTO ${tableName} 
+            (first_name, last_name, role_id, manager_id) VALUES (${first_name}, ${last_name}, ${role_id}, ${manager_id})`)
+    };
     },
     async delete(tableName){
         const data = await query(`SELECT * FROM ${tableName}`);
@@ -55,6 +91,10 @@ const queryManager = {
 
         return query(`DELETE FROM ${tableName} WHERE id = ${selection}`)
     }
+}
+
+function viewChoices() {
+    
 }
 
 module.exports = queryManager;
