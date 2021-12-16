@@ -7,7 +7,7 @@ const db = mysql.createConnection({
     //PUT YOUR OWN CREDENTIALS HERE IN THE CONNECTION CONFIG OBJECT MAKE SURE YOU RUN THE SCHEMA.SQL FIRST!!!
     user: "root",
     password: "root",
-    database: "employees"
+    database: "employees_db"
 });
 
 const query = util.promisify(db.query).bind(db);
@@ -18,8 +18,9 @@ const queryManager = {
         return query(`SELECT * FROM ${tableName}`)
     },
     async add(tableName){
-        const {name, calories, price } = await prompt([
-            {
+        const {id, title, first_name, last_name, salary, role_id, department_id, manager_id } = await prompt([
+        {
+            when: tableName = department,
             message: `What ${tableName.slice(0,-1)} would you like to add?`,
             name: 'name',
         }, 

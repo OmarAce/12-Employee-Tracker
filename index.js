@@ -3,13 +3,13 @@ const db = require("./queries");
 
 const main = async () => {
    const response = await prompt({
-        message:"Hey welcome to thirty one flavors what do you want to do?",
+        message: "Welcome to the employee database. What would you like to do?",
         type: "list",
         name: "choice",
         choices: [
-        {name:"View All Employees", value: "view employees"}, 
-        {name:"Add Employee", value: "add employees"}, 
-        {name:"Update Employee Role", value: "update employees"},
+        {name: "View All Employees", value: "view employees"}, 
+        {name: "Add Employee", value: "add employees"}, 
+        {name: "Update Employee Role", value: "update employees"},
         {name: "View All Roles", value: "views roles"},
         {name: "Add Role", value: "add roles"},
         {name: "View All Departments", value: "view departments"},
