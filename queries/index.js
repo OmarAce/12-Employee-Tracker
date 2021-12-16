@@ -104,7 +104,7 @@ const queryManager = {
     },
     async delete(tableName){
         const data = await query(`SELECT * FROM ${tableName}`);
-        console.log(data);
+        console.table(data);
         const {selection} = await prompt({
             message: `Which ${tableName.slice(0,-1)} would you like to remove?`,
             type: "list",
@@ -113,6 +113,72 @@ const queryManager = {
         });
 
         return query(`DELETE FROM ${tableName} WHERE id = ${selection}`)
+    },
+    async update(tableName){
+        const employeeData = await query(`SELECT * FROM employees`);
+        const roleData = await query(`SELECT * FROM roles`);
+        const managerData = await query(`SELECT * FROM employees WHERE manager_id IS NULL`);
+        console.table(employeeData);
+        const {employee, field, isManager, value} = await prompt([
+            {
+                message: `Which ${tableName.slice(0,-1)} would you like to update?`,
+                type: "list",
+                choices: employeeData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id})),
+                name: 'employee'
+            },
+            {
+                message: `Which field would you like to update?`,
+                type: "list",
+                choices:[
+                            {name: "first name", value: "first_name"},
+                            {name: "last name", value: "last_name"},
+                            {name: "role", value: "role_id"},
+                            {name: "manager", value: "manager_id"}   
+                        ],
+                name: 'field'
+            },
+            {
+                when: (input) => input.field == "first_name",
+                message: "Please enter a first name to be updated with",
+                name: "value",
+                type: "input",
+            },
+            {
+                when: (input) => input.field == "last_name",
+                message: "Please enter a last name to be updated with.",
+                name: "value",
+                type: "input",
+            },
+            {
+                when: (input) => input.field == "role_id",
+                message: "Please select a new role",
+                name: "value",
+                type: "list",
+                choices: roleData.map(item => ({name: item.title, value: item.id})),
+            },
+            {
+                when: (input) => input.field == "manager_id",
+                message: "Is this employee now a manager?",
+                name: "isManager",
+                type: "confirm",
+            },
+            {
+                when: (input) => input.isManager == true,
+                message: "Employee is now a Manager, no input necessary, Hit Enter",
+                name: "value",
+                type: "list",
+                choices: ["NULL"]
+            },
+            {
+                when: (input) => input.isManager == false,
+                message: "Please select who is now this employee's manager",
+                name: "value",
+                type: "list",
+                choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id})),
+            },
+        ]);
+        
+        return query(`UPDATE ${tableName} SET ${field} = "${value}" WHERE id = ${employee}`)
     }
 }
 
