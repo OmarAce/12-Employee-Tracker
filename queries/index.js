@@ -21,8 +21,8 @@ const queryManager = {
         console.log(tableName);
         const roleData = await query(`SELECT * FROM roles`);
         const managerData = await query(`SELECT * FROM employees WHERE manager_id IS NULL`);
-
-        const {id, name, title, first_name, last_name, salary, role_id, department_id, manager, manager_id } = await prompt([
+        console.log(managerData)
+        const {id, name, title, first_name, last_name, salary, role_id, department_id, isManager, manager_id } = await prompt([
         {
             when: (tableName) == "departments",
             message: `What ${tableName.slice(0,-1)} would you like to add?`,
@@ -70,10 +70,23 @@ const queryManager = {
         },
         {
             when: (tableName) == "employees",
+            message: "Is this employee a manager?",
+            name: "isManager",
+            type: "confirm",
+        },
+        {
+            when: (input) => input.isManager == false,
             message: "Who is this employee's manager",
             name: "manager_id",
             type: "list",
-            choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id}))
+            choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id})),
+        },
+        {
+            when: (input) => input.isManager == true,
+            message: "Employee is a Manager, no input necessary, Hit Enter",
+            name: "manager_id",
+            type: "list",
+            choices: ["NULL"]
         },
     ]);
         if (tableName == "departments") {
