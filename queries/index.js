@@ -63,7 +63,7 @@ const queryManager = {
             message: "What is this employee's role id?",
             name: "role_id",
             type: "list",
-            choices: viewChoices(),
+            choices: [],
         },
     ]);
         if (tableName == "departments") {
@@ -93,8 +93,16 @@ const queryManager = {
     }
 }
 
-function viewChoices() {
-    
-}
+// function viewChoices() {
+//     const data = query('SELECT * FROM roles');
+//     console.log(data);
+//     const {role_id} = prompt({
+//         message: `Which role id would you like to choose?`,
+//         type: "list",
+//         choices: data.map(item => ({name: item[tableName.slice(0,-1)], value: item.id})),
+//         name: 'role_id'
+//     });
+//     return role_id;
+// }
 
 module.exports = queryManager;
