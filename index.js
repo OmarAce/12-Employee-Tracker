@@ -12,6 +12,7 @@ const main = async () => {
         {name: "View All Employees", value: "view employees"}, 
         {name: "View Employees by Manager", value: "view2 employees"}, 
         {name: "View Employees by Department", value: "view3 employees"}, 
+        {name: "View Budget by Department", value: "view4 employees"},
         {name: "Add Employee", value: "add employees"}, 
         {name: "Update Employee", value: "update employees"},
         {name: "Delete Employee", value: "delete employees"},

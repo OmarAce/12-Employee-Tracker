@@ -46,6 +46,20 @@ const queryManager = {
         });
         return query(`SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id=roles.id WHERE roles.department_id = ${department}`)
     },
+    // Query View Budget by Department
+    async view4(tableName){
+        const departmentData = await query(`SELECT * FROM departments`);
+        console.table(departmentData);
+        const {department} = await prompt({
+                message: "Which department budget would you like to view",
+                name: "department",
+                type: "list",
+                choices: departmentData.map(item => ({name: item.name, value: item.id})),
+        });
+        const salaryData = await query(`SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.salary, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id=roles.id WHERE roles.department_id = ${department}`)
+        console.table(salaryData);
+        return query(`SELECT SUM(roles.salary) FROM roles RIGHT JOIN employees ON employees.role_id=roles.id WHERE roles.department_id = ${department}`)
+    },
     // Query Add to Database Method
     async add(tableName){
         console.log(tableName);
