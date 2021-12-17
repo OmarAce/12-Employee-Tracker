@@ -44,7 +44,7 @@ const queryManager = {
                 type: "list",
                 choices: departmentData.map(item => ({name: item.name, value: item.id})),
         });
-        return query(`SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.department_id FROM employees JOIN roles WHERE roles.department_id = ${department}`)
+        return query(`SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.department_id FROM employees LEFT JOIN roles ON employees.role_id=roles.id WHERE roles.department_id = ${department}`)
     },
     // Query Add to Database Method
     async add(tableName){
