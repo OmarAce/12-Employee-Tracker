@@ -20,14 +20,14 @@ INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Mary
 INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Dale", "Carnegie", 2, 1);
 
 INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Montgomery", "Scott", 3, null);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Angus", "MacGyver", 4, 3);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Kaylee", "Frye", 4, 3);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Cyrus", "Smith", 4, 3);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Angus", "MacGyver", 4, 4);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Kaylee", "Frye", 4, 4);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Cyrus", "Smith", 4, 4);
 
 INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "The-Minion", 5, null);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Ross", 6, 5);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Marley", 7, 5);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Dylan", 7, 5);
-INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Ross", 6, 8);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Marley", 7, 8);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Dylan", 7, 8);
+INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 8);
 
 INSERT into employees (first_name, last_name, role_id, manager_id) VALUES ("Deanna", "Troi", 9, null);
