@@ -37,6 +37,7 @@
   - View Employees
   - View Employees by Manager
   - View Employees by Department
+  - View Budget by Department
   - View Departments
   - View Roles
   - Add Employees
