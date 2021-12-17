@@ -1,28 +1,60 @@
+// Dependencies
 const util = require("util");
 const mysql = require("mysql2");
 const {prompt} = require("inquirer");
 
+// Connection to Database
 const db = mysql.createConnection({
     host:"localhost",
-    //PUT YOUR OWN CREDENTIALS HERE IN THE CONNECTION CONFIG OBJECT MAKE SURE YOU RUN THE SCHEMA.SQL FIRST!!!
     user: "root",
     password: "root",
     database: "employees_db"
 });
 
+// Promisify
 const query = util.promisify(db.query).bind(db);
 
+// Query Handler that creates View, Add, Delete, and Update Methods
 const queryManager = {
+    // Query View All Method
     view(tableName){
         console.log(tableName)
         return query(`SELECT * FROM ${tableName}`)
     },
+    // Query View by Manager
+    async view2(tableName){
+        const managerData = await query(`SELECT * FROM employees WHERE manager_id IS NULL`);
+        const {manager} = await prompt([
+            {
+                message: "Which Manager's employees would you like to view",
+                name: "manager",
+                type: "list",
+                choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id})),
+            },
+        ]);
+        return query(`SELECT * FROM ${tableName} WHERE manager_id = ${manager}`)
+    },
+    // Query View by Deparment
+    async view3(tableName){
+        const departmentData = await query(`SELECT * FROM departments`);
+        console.table(departmentData);
+        const {department} = await prompt({
+                message: "Which department would you like to view",
+                name: "department",
+                type: "list",
+                choices: departmentData.map(item => ({name: item.name, value: item.id})),
+        });
+        return query(`SELECT employees.id, employees.first_name, employees.last_name, employees.role_id, employees.manager_id, roles.title, roles.department_id FROM employees JOIN roles WHERE roles.department_id = ${department}`)
+    },
+    // Query Add to Database Method
     async add(tableName){
         console.log(tableName);
+        // Grabs Data Tables that will be used by queries
         const roleData = await query(`SELECT * FROM roles`);
         const managerData = await query(`SELECT * FROM employees WHERE manager_id IS NULL`);
-        console.log(managerData)
+        // Potential Fields from Queries
         const {id, name, title, first_name, last_name, salary, role_id, department_id, isManager, manager_id } = await prompt([
+            //Questions Asked dependant on query
         {
             when: (tableName) == "departments",
             message: `What ${tableName.slice(0,-1)} would you like to add?`,
@@ -89,6 +121,7 @@ const queryManager = {
             choices: ["NULL"]
         },
     ]);
+        // Difference answer hashes/Query returned dependant on table being referenced
         if (tableName == "departments") {
             return query(`INSERT INTO ${tableName}
             (name) VALUES ('${name}')`)
@@ -102,6 +135,7 @@ const queryManager = {
             (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id})`)
     };
     },
+    // Delete Method
     async delete(tableName){
         const data = await query(`SELECT * FROM ${tableName}`);
         console.table(data);
@@ -111,9 +145,10 @@ const queryManager = {
             choices: data.map(item => ({name: item[tableName.slice(0,-1)], value: item.id})),
             name: 'selection'
         });
-
+        //Query Returned
         return query(`DELETE FROM ${tableName} WHERE id = ${selection}`)
     },
+    // Update Method
     async update(tableName){
         const employeeData = await query(`SELECT * FROM employees`);
         const roleData = await query(`SELECT * FROM roles`);
@@ -177,8 +212,11 @@ const queryManager = {
                 choices: managerData.map(item => ({name: item.first_name+" "+item.last_name, value: item.id})),
             },
         ]);
-        
-        return query(`UPDATE ${tableName} SET ${field} = "${value}" WHERE id = ${employee}`)
+        //Query Returned
+        if (isManager) {
+            return query(`UPDATE ${tableName} SET ${field} = ${value} WHERE id = ${employee}`)
+        }
+        else return query(`UPDATE ${tableName} SET ${field} = "${value}" WHERE id = ${employee}`)
     }
 }
 
